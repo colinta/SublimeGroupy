@@ -22,4 +22,4 @@ Or:
  Commands
 ----------
 
-`Groupy`:
+`Groupy`: Opens a menu where you can view groups and create new ones.
