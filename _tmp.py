@@ -66,24 +66,26 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
         else:
             options = []
             for name in group_names:
-                options.append(('> Open {}'.format(name), lambda: self.open(name)))
+                options.append(('> Open {}'.format(name), (name,), lambda name: self.open(name)))
+
             file_name = self.window.active_view().file_name()
             if file_name:
                 for name in group_names:
                     if not self.in_group(name, file_name):
-                        options.append(('. Add {} to {}'.format(self.view_name(), name), lambda: self.add_to(name, file_name)))
+                        options.append(('. Add {} to {}'.format(self.view_name(), name), (name,), lambda name: self.add_to(name, file_name)))
                 for name in group_names:
                     if self.in_group(name, file_name):
-                        options.append(('- Remove {} from {}'.format(self.view_name(), name), lambda: self.remove_from(name, file_name)))
-            options.append(('+ New Group', lambda: self.window.run_command('groupy_new')))
+                        options.append(('- Remove {} from {}'.format(self.view_name(), name), (name,), lambda name: self.remove_from(name, file_name)))
+            options.append(('+ New Group', (), lambda: self.window.run_command('groupy_new')))
 
             self.window.show_quick_panel([opt[0] for opt in options], lambda choice: self.chose(options, choice))
 
     def chose(self, options, choice):
         if choice != -1:
             chose = options[choice]
-            func = chose[1]
-            func()
+            args = chose[1]
+            func = chose[2]
+            func(*args)
 
     def view_name(self):
         file_name = self.window.active_view().file_name()
@@ -96,11 +98,13 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
         return file_name in files
 
     def open(self, name):
+        sublime.status_message(name)
         files = self.get_my_settings('files', {}).get(name, [])
         for file in files:
             self.window.open_file(file)
 
     def remove_from(self, name, file_name):
+        sublime.status_message(name)
         all_files = self.get_my_settings('files', {})
         files = all_files.get(name, [])
         if file_name in files:
@@ -109,6 +113,7 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
             sublime.status_message('Removed {} from {}'.format(self.view_name(), name))
 
     def add_to(self, name, file_name):
+        sublime.status_message(name)
         all_files = self.get_my_settings('files', {})
         files = all_files.get(name, [])
 
