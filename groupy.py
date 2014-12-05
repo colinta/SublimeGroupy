@@ -140,6 +140,7 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
         else:
             sublime.status_message('Error: this file is already in this group')
 
+
 class GroupyNewCommand(sublime_plugin.WindowCommand, GroupySettings):
     def run(self, **kwargs):
         self.window.show_input_panel("Group Name:", '', self.new_name, None, None)
@@ -148,10 +149,20 @@ class GroupyNewCommand(sublime_plugin.WindowCommand, GroupySettings):
         group_names = self.get_my_settings('groups', [])
         group_names.append(name)
         self.set_my_settings('groups', group_names)
+
+
 class GroupyRemoveCommand(sublime_plugin.WindowCommand, GroupySettings):
     def run(self, **kwargs):
-        self.window.show_input_panel("Group Name:", '', self.remove_name, None, None)
-    def remove_name(self, name):
         group_names = self.get_my_settings('groups', [])
-        group_names.remove(name)
-        self.set_my_settings('groups', group_names)
+        options = []
+        for name in group_names:
+            options.append('Remove {}'.format(name))
+        self.window.show_quick_panel(options, lambda choice: self.remove_name(choice))
+
+    def remove_name(self, choice):
+        if choice != -1:
+            group_names = self.get_my_settings('groups', [])
+            name = group_names[choice]
+            del group_names[choice]
+            self.set_my_settings('groups', group_names)
+            sublime.status_message('Removed group {}'.format(name))
