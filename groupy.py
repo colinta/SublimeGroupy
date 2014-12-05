@@ -66,14 +66,15 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
         else:
             options = []
             for name in group_names:
-                options.append(('. Open {}'.format(name), (name,), lambda name: self.open(name)))
+                options.append(('Open {}'.format(name), (name,), lambda name: self.open(name)))
 
             file_name = self.window.active_view().file_name()
             if file_name and group_names:
-                options.append(('+ Add {} to…'.format(self.view_name()), (group_names,), lambda group_names: self.add_to(group_names, file_name)))
-                options.append(('- Remove {} from…'.format(self.view_name()), (group_names,), lambda group_names: self.remove_from(group_names, file_name)))
+                options.append(('Add {} to…'.format(self.view_name()), (group_names,), lambda group_names: self.add_to(group_names, file_name)))
+                options.append(('Remove {} from…'.format(self.view_name()), (group_names,), lambda group_names: self.remove_from(group_names, file_name)))
 
-            options.append(('. New Group', (), lambda: self.window.run_command('groupy_new')))
+            options.append(('New Group', (), lambda: self.window.run_command('groupy_new')))
+            options.append(('Remove Group', (), lambda: self.window.run_command('groupy_remove')))
 
             self.window.show_quick_panel([opt[0] for opt in options], lambda choice: self.chose(options, choice))
 
@@ -146,4 +147,11 @@ class GroupyNewCommand(sublime_plugin.WindowCommand, GroupySettings):
     def new_name(self, name):
         group_names = self.get_my_settings('groups', [])
         group_names.append(name)
+        self.set_my_settings('groups', group_names)
+class GroupyRemoveCommand(sublime_plugin.WindowCommand, GroupySettings):
+    def run(self, **kwargs):
+        self.window.show_input_panel("Group Name:", '', self.remove_name, None, None)
+    def remove_name(self, name):
+        group_names = self.get_my_settings('groups', [])
+        group_names.remove(name)
         self.set_my_settings('groups', group_names)
