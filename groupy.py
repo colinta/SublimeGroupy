@@ -73,7 +73,8 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
                 options.append(('+ Add {} to…'.format(self.view_name()), (group_names,), lambda group_names: self.add_to(group_names, file_name)))
                 options.append(('- Remove {} from…'.format(self.view_name()), (group_names,), lambda group_names: self.remove_from(group_names, file_name)))
 
-            options.append(('. New Group', (), lambda: self.window.run_command('groupy_new')))
+            options.append(('! New Group', (), lambda: self.window.run_command('groupy_new')))
+            options.append(('! Remove Group', (), lambda: self.window.run_command('groupy_remove')))
 
             self.window.show_quick_panel([opt[0] for opt in options], lambda choice: self.chose(options, choice))
 
@@ -139,6 +140,7 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
         else:
             sublime.status_message('Error: this file is already in this group')
 
+
 class GroupyNewCommand(sublime_plugin.WindowCommand, GroupySettings):
     def run(self, **kwargs):
         self.window.show_input_panel("Group Name:", '', self.new_name, None, None)
@@ -147,3 +149,20 @@ class GroupyNewCommand(sublime_plugin.WindowCommand, GroupySettings):
         group_names = self.get_my_settings('groups', [])
         group_names.append(name)
         self.set_my_settings('groups', group_names)
+
+
+class GroupyRemoveCommand(sublime_plugin.WindowCommand, GroupySettings):
+    def run(self, **kwargs):
+        group_names = self.get_my_settings('groups', [])
+        options = []
+        for name in group_names:
+            options.append('Remove {}'.format(name))
+        self.window.show_quick_panel(options, lambda choice: self.remove_name(choice))
+
+    def remove_name(self, choice):
+        if choice != -1:
+            group_names = self.get_my_settings('groups', [])
+            name = group_names[choice]
+            del group_names[choice]
+            self.set_my_settings('groups', group_names)
+            sublime.status_message('Removed group {}'.format(name))
