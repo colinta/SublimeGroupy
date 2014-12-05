@@ -106,7 +106,7 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
         for name in group_names:
             files = self.get_my_settings('files', {}).get(name, [])
             if file_name in files:
-                options.append((['- {}'.format(name), 'Remove {} from {}'.format(self.view_name(), name)], (name,), lambda name: self.remove_from_group(name, file_name)))
+                options.append(([name, 'Remove {} from {}'.format(self.view_name(), name)], (name,), lambda name: self.remove_from_group(name, file_name)))
         if options:
             self.window.show_quick_panel([opt[0] for opt in options], lambda choice: self.chose(options, choice))
         else:
@@ -124,7 +124,9 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
     def add_to(self, group_names, file_name):
         options = []
         for name in group_names:
-            options.append((['+ {}'.format(name), 'Add {} to {}'.format(self.view_name(), name)], (name,), lambda name: self.add_to_group(name, file_name)))
+            files = self.get_my_settings('files', {}).get(name, [])
+            if file_name not in files:
+                options.append(([name, 'Add {} to {}'.format(self.view_name(), name)], (name,), lambda name: self.add_to_group(name, file_name)))
         self.window.show_quick_panel([opt[0] for opt in options], lambda choice: self.chose(options, choice))
 
     def add_to_group(self, name, file_name):
