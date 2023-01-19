@@ -3,11 +3,11 @@
   "description": "Stores and opens named file groups",
   "author": "Colin T.A. Gray (colinta)",
   "details": "https://github.com/colinta/SublimeGroupy",
-  "labels": ["autocomplete", "rubymotion"],
+  "labels": ["bookmarks"],
   "releases": [
     {
       "details": "https://github.com/colinta/SublimeGroupy/tags",
-      "sublime_text": "*"
+      "sublime_text": ">=3000"
     }
   ]
 }
