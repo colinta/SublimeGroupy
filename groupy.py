@@ -110,7 +110,7 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
         if options:
             self.window.show_quick_panel([opt[0] for opt in options], lambda choice: self.chose(options, choice))
         else:
-            sublime.status_message('This file is not in any groups')
+            self.view.show_popup('This file is not in any groups')
 
     def remove_from_group(self, name, file_name):
         sublime.status_message(name)
@@ -140,7 +140,7 @@ class GroupyCommand(sublime_plugin.WindowCommand, GroupySettings):
             self.set_my_settings('files', all_files)
             sublime.status_message('Added {} to {}'.format(self.view_name(), name))
         else:
-            sublime.status_message('Error: this file is already in this group')
+            self.view.show_popup('Error: this file is already in this group')
 
 
 class GroupyNewCommand(sublime_plugin.WindowCommand, GroupySettings):
