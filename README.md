@@ -1,5 +1,6 @@
- Groupy
-========
+Groupy
+=======
+
 ###### Sublime Plugin
 
 Stores and opens named file groups.  File groups are stored in project settings,
@@ -16,23 +17,16 @@ The basic process goes something like this:
 The flow could use some tweaking.  Right now it's optimized for the "open files"
 use case.  Adding and removing files is a bit clunky.  Recommendations welcome!
 
- Installation
---------------
+Installation
+------------
 
-1. Using Package Control, install "Groupy"
+Using Package Control, install "Groupy" or clone this repo in your packages folder.
 
-Or:
+It is strongly recommended you add key bindings for the commands.
 
-1. Open the Sublime Text 3 Packages folder
+See Example.sublime-keymap file for my preferred keys.
 
-    - OS X: ~/Library/Application Support/Sublime Text 3/Packages/
-    - Windows: %APPDATA%/Sublime Text 3/Packages/
-    - Linux: ~/.Sublime Text 3/Packages/
+Commands
+--------
 
-2. clone this repo
-3. Install keymaps for the commands (see Example.sublime-keymap for my preferred keys)
-
- Commands
-----------
-
-`Groupy`: Opens a menu where you can view groups and create new ones.
+`groupy`: Opens a menu where you can view groups and create new ones.
